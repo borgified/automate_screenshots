@@ -1,0 +1,15 @@
+FROM python:slim
+ENV DISPLAY=:0
+ENV WEBDRIVER=https://chromedriver.storage.googleapis.com/90.0.4430.24/chromedriver_linux64.zip
+ENV BROWSER=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt-get -y update && apt-get -y install\
+  wget \
+  unzip \
+  libnss3 \
+   && rm -rf /var/lib/apt/lists/*
+RUN pip install selenium
+RUN wget $WEBDRIVER -P /tmp && unzip /tmp/${WEBDRIVER##*/} && mv chromedriver /usr/local/bin/ && rm /tmp/${WEBDRIVER##*/}
+RUN wget $BROWSER -P /tmp && apt-get -y update && apt install -y /tmp/${BROWSER##*/} && rm /tmp/${BROWSER##*/} && rm -rf /var/lib/apt/lists/*
+WORKDIR /workdir
+COPY chrome.py .
+CMD ./chrome.py

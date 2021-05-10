@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+rm -f screenshot.png
+docker build . -t test-firefox -f Dockerfile.firefox
+docker run -v $PWD:/workdir test
+open screenshot.png
